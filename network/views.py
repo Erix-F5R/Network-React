@@ -23,9 +23,17 @@ def index(request):
 
     return render(request, "network/index.html", {"form": NewPostForm()})
 
+def profile(request, username):
+    if request.POST.get("submit") == "Follow":
+        hello =  0
+
+    return render(request,"network/profile.html", {"user": username})
 
 def all_posts(request):
-    return render(request, "network/all_posts.html" )
+
+    all_posts = Post.objects.all().order_by("-date")
+
+    return render(request, "network/all_posts.html", {"all_posts": all_posts} )
 
 def login_view(request):
     if request.method == "POST":

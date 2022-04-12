@@ -1,6 +1,14 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-ALL POSTS
+
+    {% for post in all_posts%}
+    
+    
+    <div><a class="nav-link" href="{% url 'profile' post.user %}">{{post.user}}</a></div>
+    <div>{{post.body}}</div>
+    <div>{{post.date}}</div><br>
+    
+    {% endfor %}
 
 {% endblock %}
