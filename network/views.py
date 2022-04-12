@@ -3,6 +3,8 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.core.paginator import Paginator
+
 
 from .models import Follower, User, Post
 from.forms import NewPostForm
@@ -24,10 +26,18 @@ def index(request):
     return render(request, "network/index.html", {"form": NewPostForm()})
 
 def profile(request, username):
+
+
     
     viewed_user = User.objects.get(username=username)
     logged_in_user = request.user 
-    posts = Post.objects.filter(user=viewed_user).order_by("-date")
+
+    #Pagination
+    p = Paginator(Post.objects.filter(user=viewed_user).order_by("-date"),10)
+    page = request.GET.get('page')
+    posts = p.get_page(page)
+
+    #posts = Post.objects.filter(user=viewed_user).order_by("-date")
 
     if request.method == "POST":        
         if request.POST.get("submit") == "Follow":
