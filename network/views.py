@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Post
+from .models import Follower, User, Post
 from.forms import NewPostForm
 
 
@@ -24,10 +24,26 @@ def index(request):
     return render(request, "network/index.html", {"form": NewPostForm()})
 
 def profile(request, username):
-    if request.POST.get("submit") == "Follow":
-        hello =  0
+    
+    viewed_user = User.objects.get(username=username)
+    logged_in_user = request.user 
+    posts = Post.objects.filter(user=viewed_user).order_by("-date")
 
-    return render(request,"network/profile.html", {"user": username})
+    if request.method == "POST":        
+        if request.POST.get("submit") == "Follow":
+            if viewed_user != logged_in_user:
+                follower = Follower(following=logged_in_user, followed=viewed_user )
+                follower.save()
+            return HttpResponseRedirect(f"/user/{viewed_user}")
+
+       
+
+    
+    following_count = Follower.objects.filter(following=viewed_user).count
+    followed_count = Follower.objects.filter(followed=viewed_user).count
+    
+    
+    return render(request,"network/profile.html", {"user": viewed_user,"posts": posts, "following_count": following_count, "followed_count":followed_count})
 
 def all_posts(request):
 
