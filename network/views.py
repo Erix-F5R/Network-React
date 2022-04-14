@@ -23,7 +23,7 @@ def index(request):
                         user = User.objects.get(pk=request.user.id))
             post.save()    
 
-    return render(request, "network/index.html", {"form": NewPostForm()})
+    return render(request, "network/index.html", {"form": NewPostForm(),"current_user": request.user})
 
 def profile(request, username):
 
@@ -53,13 +53,13 @@ def profile(request, username):
     followed_count = Follower.objects.filter(followed=viewed_user).count
     
     
-    return render(request,"network/profile.html", {"user": viewed_user,"posts": posts, "following_count": following_count, "followed_count":followed_count})
+    return render(request,"network/profile.html", {"current_user": logged_in_user,"user": viewed_user,"posts": posts, "following_count": following_count, "followed_count":followed_count})
 
 def all_posts(request):
 
     all_posts = Post.objects.all().order_by("-date")
 
-    return render(request, "network/all_posts.html", {"all_posts": all_posts} )
+    return render(request, "network/all_posts.html", {"all_posts": all_posts, "current_user": request.user} )
 
 def login_view(request):
     if request.method == "POST":
