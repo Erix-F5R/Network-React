@@ -4,11 +4,11 @@
 
     {% for post in all_posts%}
     
-    
+    <div style ="border: solid black 2px;">
     <div><a class="nav-link" href="{% url 'profile' post.user %}">{{post.user}}</a></div>
     <div>{{post.body}}</div>
     <div>{{post.date}}</div><br>
-    
+    </div>
     {% endfor %}
 
 {% endblock %}

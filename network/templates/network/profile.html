@@ -13,10 +13,20 @@ Following: {{following_count}}
     <input type="submit" name="submit" value="Follow">
 </form>
 
-{% for post in posts%}    
+{% for post in posts%}
+<div  style ="border: solid black 2px;">    
 <div>{{post.user}}</div>
 <div>{{post.body}}</div>
 <div>{{post.date}}</div><br>
+
+<form action="{% url 'edit' post.id %}" method='POST'>
+    {%csrf_token%}
+    <input type="submit" name="submit" value="Edit">
+</form>
+    
+
+
+</div>
 {% endfor %}
 
 

@@ -1,0 +1,17 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+EDIT {{post}}
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <button class="btn btn-sm btn-outline-primary" id="save">Save</button>
+</form>
+
+<script src="{% static 'network/edit.js' %}"></script>
+
+
+{% endblock %}

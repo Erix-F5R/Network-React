@@ -25,6 +25,17 @@ def index(request):
 
     return render(request, "network/index.html", {"form": NewPostForm(),"current_user": request.user})
 
+def edit(request, post_id):
+    
+    post = Post.objects.get(id=post_id)
+    post_form = NewPostForm(instance=post, initial={'body':post.body})
+
+    #IF POST
+    #form = MyModelForm(request.POST, instance=my_record)
+
+    return render(request, "network/edit.html", {"form":post_form,"current_user": request.user,"post":post_id})
+
+
 def profile(request, username):
 
 
