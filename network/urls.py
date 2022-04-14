@@ -14,6 +14,6 @@ urlpatterns = [
     path("edit/<int:post_id>", views.edit, name="edit"),
 
     ##API
-
+    path("editor/<int:post_id>", views.editor, name="editor"),
     path("all_posts", views.all_posts, name="all-posts"),
 ]

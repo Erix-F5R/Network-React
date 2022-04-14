@@ -1,10 +1,13 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator
 
+from django.views.decorators.csrf import csrf_exempt
+
+import json
 
 from .models import Follower, User, Post
 from.forms import NewPostForm
@@ -34,6 +37,22 @@ def edit(request, post_id):
     #form = MyModelForm(request.POST, instance=my_record)
 
     return render(request, "network/edit.html", {"form":post_form,"current_user": request.user,"post":post_id})
+
+##API
+@csrf_exempt
+def editor(request,post_id):  
+    
+    try:
+        post = Post.objects.get(id = post_id)
+    except:
+        return JsonResponse({"error": "Post not found."}, status=404)
+    
+    text = json.loads(request.body).get("text")
+    post.body = text
+    post.save()
+
+
+    return HttpResponse(status=204)
 
 
 def profile(request, username):
