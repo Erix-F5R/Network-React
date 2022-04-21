@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 import json
 
-from .models import Follower, User, Post
+from .models import Follower, User, Post, Like
 from.forms import NewPostForm
 
 

@@ -1,3 +1,4 @@
+from email.headerregistry import ContentTransferEncodingHeader
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -28,3 +29,10 @@ class Follower(models.Model):
 
     def __str__(self):
        return f"{self.following} follows {self.followed}"
+
+class Like(models.Model):
+    user = models.ForeignKey("User", on_delete=models.CASCADE)
+    post = models.ForeignKey("Post", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user} likes a post by: {self.post}"
