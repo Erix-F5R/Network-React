@@ -1,4 +1,6 @@
 {% extends "network/layout.html" %}
+{% load static %}
+
 
 {% block body %}
 
@@ -7,9 +9,15 @@
     <div style ="border: solid black 2px;">
     <div><a class="nav-link" href="{% url 'profile' post.user %}">{{post.user}}</a></div>
     <div>{{post.body}}</div>
-    <div>{{post.date}}</div><br>
+    <div>{{post.date}}</div>
+    <div data-id="{{post.id}}" class="like"></div>
+
+    <br>
     </div>
-    <div>
+    
+    
     {% endfor %}
+
+    <script src="{% static 'network/edit.js' %}"></script>
 
 {% endblock %}

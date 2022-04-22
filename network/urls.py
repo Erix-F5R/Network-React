@@ -15,5 +15,6 @@ urlpatterns = [
 
     ##API
     path("editor/<int:post_id>", views.editor, name="editor"),
+    path("likes/<int:post_id>",views.likes, name="likes"),
     path("all_posts", views.all_posts, name="all-posts"),
 ]
