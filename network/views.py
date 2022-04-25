@@ -54,21 +54,20 @@ def editor(request,post_id):
 
     return HttpResponse(status=204)
 
-##API
-@csrf_exempt
-def like(request,post_id):  
-    
+##SAVE A LIKE TO A POST
+
+##GET Request
+def getlikes(request, post_id):
+
     try:
         post = Post.objects.get(id = post_id)
     except:
         return JsonResponse({"error": "Post not found."}, status=404)
     
-    text = json.loads(request.body).get("text")
-    post.body = text
-    post.save()
-
-
-    return HttpResponse(status=204)
+    if request.method == "GET":
+        count = Like.objects.filter(post = post).count()
+        return JsonResponse({"message": count}, status=201)
+    
 
 
 def profile(request, username):

@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if(like.length !== 0){        
         like.forEach((post) => { 
             let id = post.dataset.id
-            likes(id)
+            GET_likes(id)
             post.innerHTML = id       
         })
     }
@@ -40,6 +40,17 @@ function save(post_id){
 
 }
 
-function likes(post_id){
-    
+function GET_likes(post_id){
+
+
+    fetch(`getlikes/${post_id}`)
+    .then(response => response.json())
+    .then(data => {
+
+        console.log(data)
+
+    } )
+
+
+
 }
