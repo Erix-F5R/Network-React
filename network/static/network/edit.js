@@ -16,12 +16,16 @@ document.addEventListener('DOMContentLoaded', function () {
     
     //Like Button
     let like = document.querySelectorAll('.like')
+
+
+
     
     if(like.length !== 0){        
-        like.forEach((post) => { 
+        like.forEach( (post) => { 
             let id = post.dataset.id
-            GET_likes(id)
-            post.innerHTML = id       
+            GET_likes(post, id)
+            post.innerHTML = id
+                
         })
     }
    
@@ -40,14 +44,14 @@ function save(post_id){
 
 }
 
-function GET_likes(post_id){
+function GET_likes(post, post_id){
 
 
     fetch(`getlikes/${post_id}`)
     .then(response => response.json())
     .then(data => {
 
-        console.log(data)
+        post.innerHTML += `Likes: ${data.count}`
 
     } )
 

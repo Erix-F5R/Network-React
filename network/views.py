@@ -66,7 +66,7 @@ def getlikes(request, post_id):
     
     if request.method == "GET":
         count = Like.objects.filter(post = post).count()
-        return JsonResponse({"message": count}, status=201)
+        return JsonResponse({"count": count})
     
 
 
