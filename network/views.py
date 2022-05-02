@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 
 from .models import Follower, User, Post, Like
-from.forms import NewPostForm
+from .forms import NewPostForm
 
 
 def index(request):
@@ -68,7 +68,32 @@ def getlikes(request, post_id):
         count = Like.objects.filter(post = post).count()
         return JsonResponse({"count": count})
     
+    return HttpResponse(status=204)
+##POST Request
 
+def postlike(request, post_id):
+
+    print("$$$$$11111")
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
+
+    data = json.loads(request.body)
+    like = data.get("like")
+
+    if like:
+        print("$$$$$222222")
+        try:
+            post = Post.objects.get(id = post_id)
+            user = request.user
+        except:
+            return JsonResponse({"error": "Post not found."}, status=404)
+
+        
+        
+        newLike = Like(user=user, post=post)
+        newLike.save()
+    
+    return HttpResponse(status=204)
 
 def profile(request, username):
 
@@ -101,7 +126,7 @@ def profile(request, username):
     return render(request,"network/profile.html", {"current_user": logged_in_user,"user": viewed_user,"posts": posts, "following_count": following_count, "followed_count":followed_count})
 
 def all_posts(request):
-
+    
     all_posts = Post.objects.all().order_by("-date")
 
     return render(request, "network/all_posts.html", {"all_posts": all_posts, "current_user": request.user} )

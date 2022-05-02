@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-   
+
     
    var id = window.location.pathname.split('/edit/')[1]
   
-   // Use buttons to toggle between views
+   //
    let save = document.querySelector('#save');
     if(save !== null){
         save.addEventListener('click', (event) => {
@@ -13,12 +13,8 @@ document.addEventListener('DOMContentLoaded', function () {
       
        });
     }
-    
-    //Like Button
+    //Number of Likes
     let like = document.querySelectorAll('.like')
-
-
-
     
     if(like.length !== 0){        
         like.forEach( (post) => { 
@@ -27,6 +23,21 @@ document.addEventListener('DOMContentLoaded', function () {
             post.innerHTML = id
                 
         })
+    }
+
+    //Like Button
+    let like_buttons = document.querySelectorAll('.like-button');
+    
+    if(like_buttons.length !== 0){
+
+        like_buttons.forEach( (button) =>{
+
+            button.addEventListener('click', (click) => {
+                click.preventDefault()
+                like_post(click.currentTarget.dataset.id)
+            })
+        } )
+
     }
    
 
@@ -44,6 +55,21 @@ function save(post_id){
 
 }
 
+function like_post(post_id){
+
+    const csrftoken = getCookie('csrftoken');
+
+    fetch(`postlike/${post_id}`, {
+        method: 'POST',
+        headers: {'X-CSRFToken': csrftoken},
+        body: JSON.stringify({
+            like: true,
+        })
+      })
+    
+}
+
+
 function GET_likes(post, post_id){
 
 
@@ -57,4 +83,20 @@ function GET_likes(post, post_id){
 
 
 
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
