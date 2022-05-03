@@ -73,7 +73,7 @@ def getlikes(request, post_id):
 
 def postlike(request, post_id):
 
-    print("$$$$$11111")
+    
     if request.method != "POST":
         return JsonResponse({"error": "POST request required."}, status=400)
 
@@ -81,17 +81,22 @@ def postlike(request, post_id):
     like = data.get("like")
 
     if like:
-        print("$$$$$222222")
         try:
             post = Post.objects.get(id = post_id)
             user = request.user
         except:
             return JsonResponse({"error": "Post not found."}, status=404)
 
-        
-        
-        newLike = Like(user=user, post=post)
-        newLike.save()
+        ##Like
+        if not Like.objects.filter(user=user,post=post).exists():
+            newLike = Like(user=user, post=post)
+            newLike.save()
+            return JsonResponse({'like': 'true'})
+        ##Unlike
+        else:
+            Like.objects.filter(user=user,post=post).delete()
+            return JsonResponse({'like': 'false'})
+
     
     return HttpResponse(status=204)
 

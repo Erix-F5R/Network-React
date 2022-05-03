@@ -66,6 +66,12 @@ function like_post(post_id){
             like: true,
         })
       })
+      .then(response => response.json())
+      .then(data => {
+  
+          console.log(data.like)
+  
+      } )
     
 }
 
