@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function () {
         like.forEach( (post) => { 
             let id = post.dataset.id
             GET_likes(post, id)
-            post.innerHTML = id
                 
         })
     }
@@ -32,9 +31,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
         like_buttons.forEach( (button) =>{
 
-            button.addEventListener('click', (click) => {
+            button.addEventListener('click', async (click) => {
                 click.preventDefault()
-                like_post(click.currentTarget.dataset.id)
+                let id = click.currentTarget.dataset.id
+                let post = document.querySelector(`#like-${id}`)
+                //Step 1 post
+                await like_post(id)
+                
+                //Step 2 to Get
+                GET_likes(post,id)
+                
             })
         } )
 
@@ -55,11 +61,11 @@ function save(post_id){
 
 }
 
-function like_post(post_id){
+async function like_post(post_id){
 
     const csrftoken = getCookie('csrftoken');
 
-    fetch(`postlike/${post_id}`, {
+    return fetch(`postlike/${post_id}`, {
         method: 'POST',
         headers: {'X-CSRFToken': csrftoken},
         body: JSON.stringify({
@@ -83,7 +89,7 @@ function GET_likes(post, post_id){
     .then(response => response.json())
     .then(data => {
 
-        post.innerHTML += `Likes: ${data.count}`
+        post.innerHTML = `Likes: ${data.count}`
 
     } )
 
