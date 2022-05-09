@@ -33,8 +33,6 @@ def edit(request, post_id):
     post = Post.objects.get(id=post_id)
     post_form = NewPostForm(instance=post, initial={'body':post.body})
 
-    #IF POST
-    #form = MyModelForm(request.POST, instance=my_record)
 
     return render(request, "network/edit.html", {"form":post_form,"current_user": request.user,"post":post_id})
 
@@ -44,13 +42,12 @@ def editor(request,post_id):
     
     try:
         post = Post.objects.get(id = post_id)
-        #user = request.user
+        user = request.user
     except:
         return JsonResponse({"error": "Post not found."}, status=404)
     
-    #print(post.user, user)
-    #if not post.user == user:
-    #    return JsonResponse({"error": "You may only edit your own posts."}, status=404)
+    if not post.user == user:
+        return JsonResponse({"error": "You may only edit your own posts."}, status=404)
 
     text = json.loads(request.body).get("text")
     post.body = text

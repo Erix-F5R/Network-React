@@ -9,10 +9,11 @@ document.addEventListener('DOMContentLoaded', function () {
     if(save !== null){
         save.addEventListener('click', (event) => {
             event.preventDefault()
-            save(id)
+            save_text(id)
       
        });
     }
+    
     //Number of Likes
     let like = document.querySelectorAll('.like')
     
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     }
 
+   
     //Like Button
     let like_buttons = document.querySelectorAll('.like-button');
     
@@ -49,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-function save(post_id){
+function save_text(post_id){
     var text =  document.querySelector('textarea').value
     
     fetch(`/editor/${post_id}`, {
@@ -72,11 +74,6 @@ async function like_post(post_id){
             like: true,
         })
       })
-      .then(response => response.json())
-      .then(data => {
-  
-  
-      } )
     
 }
 
