@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', function () {
    let save = document.querySelector('#save');
     if(save !== null){
         save.addEventListener('click', (event) => {
-      event.preventDefault()
-      save(id)
+            event.preventDefault()
+            save(id)
       
        });
     }
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 click.preventDefault()
                 let id = click.currentTarget.dataset.id
                 let post = document.querySelector(`#like-${id}`)
-                //Step 1 post
+                //Step 1 post. Wait for step 1 to execute before continuing 
                 await like_post(id)
                 
                 //Step 2 to Get
@@ -75,7 +75,6 @@ async function like_post(post_id){
       .then(response => response.json())
       .then(data => {
   
-          console.log(data.like)
   
       } )
     
@@ -88,8 +87,15 @@ function GET_likes(post, post_id){
     fetch(`getlikes/${post_id}`)
     .then(response => response.json())
     .then(data => {
-
         post.innerHTML = `Likes: ${data.count}`
+
+        let button = document.querySelector(`#button-${post_id}`)
+        if (data.like === 'true'){
+            button.innerHTML = 'Like'
+        }
+        else{
+            button.innerHTML = 'Unlike'
+        }
 
     } )
 

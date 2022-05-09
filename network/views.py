@@ -44,9 +44,14 @@ def editor(request,post_id):
     
     try:
         post = Post.objects.get(id = post_id)
+        #user = request.user
     except:
         return JsonResponse({"error": "Post not found."}, status=404)
     
+    #print(post.user, user)
+    #if not post.user == user:
+    #    return JsonResponse({"error": "You may only edit your own posts."}, status=404)
+
     text = json.loads(request.body).get("text")
     post.body = text
     post.save()
@@ -54,20 +59,24 @@ def editor(request,post_id):
 
     return HttpResponse(status=204)
 
-##SAVE A LIKE TO A POST
+
 
 ##GET Request
 def getlikes(request, post_id):
 
     try:
         post = Post.objects.get(id = post_id)
+        user = request.user
     except:
         return JsonResponse({"error": "Post not found."}, status=404)
     
     if request.method == "GET":
         count = Like.objects.filter(post = post).count()
-        return JsonResponse({"count": count})
-    
+        if not Like.objects.filter(user=user,post=post).exists():
+            return JsonResponse({"count": count, 'like': 'true'})
+        else:
+            return JsonResponse({"count": count, 'like': 'false'})
+
     return HttpResponse(status=204)
 ##POST Request
 
