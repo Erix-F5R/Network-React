@@ -1,16 +1,20 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
 
-<strong>{{user}}</strong>
 <br>
 Followers: {{followed_count}}
 Following: {{following_count}}
 
-
+<strong>{{ifFollows}}</strong>
 <form action="" method="post">
     {% csrf_token %}
-    <input type="submit" name="submit" value="Follow">
+    {%if ifFollows%}
+    <input type="submit" name="submit" id="follow-button" value="Unfollow">
+    {%else%}
+    <input type="submit" name="submit" id="follow-button" value="Follow">
+    {%endif%}
 </form>
 
 {% for post in posts%}
@@ -19,10 +23,16 @@ Following: {{following_count}}
 <div>{{post.body}}</div>
 <div>{{post.date}}</div><br>
 
+
+<div data-id="{{post.id}}" class="like" id="like-{{post.id}}"></div>    
+<button class="like-button" data-id="{{post.id}}" id="button-{{post.id}}" type="button">Like</button>
+
+{%if current_user == viewed_user%}
 <form action="{% url 'edit' post.id %}" method='POST'>
     {%csrf_token%}
     <input type="submit" name="submit" value="Edit">
 </form>
+{%endif%}
     
 
 
@@ -48,5 +58,7 @@ Following: {{following_count}}
     </span>
 </div>
 
+
+<script src="{% static 'network/edit.js' %}"></script>
 
 {% endblock %}

@@ -69,10 +69,16 @@ def getlikes(request, post_id):
     
     if request.method == "GET":
         count = Like.objects.filter(post = post).count()
-        if not Like.objects.filter(user=user,post=post).exists():
-            return JsonResponse({"count": count, 'like': 'true'})
+        
+        if user.is_anonymous:
+            like_exists = False
         else:
+            like_exists = Like.objects.filter(user=user,post=post).exists()
+
+        if like_exists:
             return JsonResponse({"count": count, 'like': 'false'})
+        else:
+            return JsonResponse({"count": count, 'like': 'true'})
 
     return HttpResponse(status=204)
 ##POST Request
@@ -107,11 +113,10 @@ def postlike(request, post_id):
     return HttpResponse(status=204)
 
 def profile(request, username):
-
-
     
     viewed_user = User.objects.get(username=username)
     logged_in_user = request.user 
+    ifFollows = Follower.objects.filter(following=logged_in_user, followed=viewed_user ).exists()
 
     #Pagination
     p = Paginator(Post.objects.filter(user=viewed_user).order_by("-date"),10)
@@ -123,18 +128,28 @@ def profile(request, username):
     if request.method == "POST":        
         if request.POST.get("submit") == "Follow":
             if viewed_user != logged_in_user:
-                follower = Follower(following=logged_in_user, followed=viewed_user )
-                follower.save()
-            return HttpResponseRedirect(f"/user/{viewed_user}")
-
-       
+                #Check if already follows                
+                if not ifFollows:
+                    follower = Follower(following=logged_in_user, followed=viewed_user ) 
+                    follower.save()
+                            
+        elif request.POST.get("submit") == "Unfollow":
+            if viewed_user != logged_in_user:
+                Follower.objects.filter(following=logged_in_user, followed=viewed_user ).delete()
+                
+        return HttpResponseRedirect(f"/user/{viewed_user}")
 
     
     following_count = Follower.objects.filter(following=viewed_user).count
     followed_count = Follower.objects.filter(followed=viewed_user).count
     
     
-    return render(request,"network/profile.html", {"current_user": logged_in_user,"user": viewed_user,"posts": posts, "following_count": following_count, "followed_count":followed_count})
+    return render(request,"network/profile.html", {"current_user": logged_in_user,
+                                                    "viewed_user": viewed_user,
+                                                    "posts": posts,
+                                                    "following_count": following_count,
+                                                    "followed_count":followed_count,
+                                                    "ifFollows":ifFollows})
 
 def all_posts(request):
     

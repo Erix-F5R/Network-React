@@ -1,10 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-
     
    var id = window.location.pathname.split('/edit/')[1]
   
-   //
+   //Edit Post
    let save = document.querySelector('#save');
     if(save !== null){
         save.addEventListener('click', (event) => {
@@ -17,8 +16,8 @@ document.addEventListener('DOMContentLoaded', function () {
     //Number of Likes
     let like = document.querySelectorAll('.like')
     
-    if(like.length !== 0){        
-        like.forEach( (post) => { 
+    if(like.length !== 0){            
+        like.forEach( (post) => {
             let id = post.dataset.id
             GET_likes(post, id)
                 
@@ -80,10 +79,10 @@ async function like_post(post_id){
 
 function GET_likes(post, post_id){
 
-
-    fetch(`getlikes/${post_id}`)
+    fetch(`/getlikes/${post_id}`)
     .then(response => response.json())
     .then(data => {
+        
         post.innerHTML = `Likes: ${data.count}`
 
         let button = document.querySelector(`#button-${post_id}`)
