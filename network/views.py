@@ -157,6 +157,19 @@ def all_posts(request):
 
     return render(request, "network/all_posts.html", {"all_posts": all_posts, "current_user": request.user} )
 
+def following(request):
+    current_user = request.user
+    following =  Follower.objects.filter(following=current_user)
+    following_posts = Post.objects.none()
+
+    for u in following:
+
+        following_posts = following_posts.union( Post.objects.filter(user = u.followed) )
+
+    print(following_posts, following)
+
+    return render(request, "network/following.html",{ "following_posts": following_posts.order_by("-date"), "current_user": request.user} )
+
 def login_view(request):
     if request.method == "POST":
 
